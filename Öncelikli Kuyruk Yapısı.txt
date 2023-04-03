@@ -1,0 +1,114 @@
+Öncelikli Kuyruk Yapısı
+Bağlı liste kullanarak:
+public class PriorityQueue<T> where T : IComparable<T>
+{
+    private LinkedList<T> _list;
+
+    public PriorityQueue()
+    {
+        _list = new LinkedList<T>();
+    }
+
+    public void Enqueue(T item)
+    {
+        if (_list.Count == 0)
+        {
+            _list.AddFirst(item);
+        }
+        else
+        {
+            LinkedListNode<T> currentNode = _list.First;
+
+            while (currentNode != null && currentNode.Value.CompareTo(item) >= 0)
+            {
+                currentNode = currentNode.Next;
+            }
+
+            if (currentNode == null)
+            {
+                _list.AddLast(item);
+            }
+            else
+            {
+                _list.AddBefore(currentNode, item);
+            }
+        }
+    }
+
+    public T Dequeue()
+    {
+        if (_list.Count == 0)
+        {
+            throw new InvalidOperationException("Queue is empty");
+        }
+
+        T item = _list.First.Value;
+        _list.RemoveFirst();
+        return item;
+    }
+
+    public T Peek()
+    {
+        if (_list.Count == 0)
+        {
+            throw new InvalidOperationException("Queue is empty");
+        }
+
+        return _list.First.Value;
+    }
+
+    public int Count
+    {
+        get { return _list.Count; }
+    }
+
+    public void Clear()
+    {
+        _list.Clear();
+    }
+}
+
+
+
+
+
+
+Dizi kullanarak:
+public class PriorityQueue<T> where T : IComparable<T>
+{
+    private T[] _heap;
+    private int _count;
+
+    public PriorityQueue()
+    {
+        _heap = new T[4];
+        _count = 0;
+    }
+
+    public void Enqueue(T item)
+    {
+        if (_count == _heap.Length - 1)
+        {
+            Array.Resize(ref _heap, _heap.Length * 2);
+        }
+
+        _count++;
+        int i = _count;
+
+        while (i > 1 && item.CompareTo(_heap[i / 2]) < 0)
+        {
+            _heap[i] = _heap[i / 2];
+            i = i / 2;
+        }
+
+        _heap[i] = item;
+    }
+
+    public T Dequeue()
+    {
+        if (_count == 0)
+        {
+            throw new InvalidOperationException("Queue is empty");
+        }
+
+        T item = _heap

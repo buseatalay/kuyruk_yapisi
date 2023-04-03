@@ -1,0 +1,62 @@
+Kuyruk kullanarak radix sort algoritması
+
+public static void RadixSort(int[] arr)
+{
+    // En büyük sayının basamak sayısını bulma
+    int maxDigitCount = GetMaxDigitCount(arr);
+
+    // Basamaklarına göre sıralama işlemi yapılır
+    for (int i = 0; i < maxDigitCount; i++)
+    {
+        // Basamak değeri için kuyruk oluşturma
+        Queue<int>[] digitQueues = new Queue<int>[10];
+        for (int j = 0; j < 10; j++)
+        {
+            digitQueues[j] = new Queue<int>();
+        }
+
+        // Dizi elemanlarını kuyruklara dağıtma
+        for (int j = 0; j < arr.Length; j++)
+        {
+            int digit = GetDigit(arr[j], i + 1);
+            digitQueues[digit].Enqueue(arr[j]);
+        }
+
+        // Kuyrukları birleştirme
+        int index = 0;
+        for (int j = 0; j < 10; j++)
+        {
+            while (digitQueues[j].Count > 0)
+            {
+                arr[index] = digitQueues[j].Dequeue();
+                index++;
+            }
+        }
+    }
+}
+
+private static int GetMaxDigitCount(int[] arr)
+{
+    int max = 0;
+
+    foreach (int num in arr)
+    {
+        int count = 0;
+        while (num > 0)
+        {
+            count++;
+            num /= 10;
+        }
+        if (count > max)
+        {
+            max = count;
+        }
+    }
+
+    return max;
+}
+
+private static int GetDigit(int num, int digitPlace)
+{
+    return (num / (int)Math.Pow(10, digitPlace - 1)) % 10;
+}
